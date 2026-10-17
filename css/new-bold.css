@@ -1,0 +1,1831 @@
+/* ═══════════════════════════════════════════════════════════
+   ACME — Portfolio, oversized-wordmark direction (index4.html)
+
+   Modelled on the Storevaldo reference the client shared: a giant
+   wordmark running the width of the hero with the subject standing
+   in front of it, interrupting the letters.
+
+   Softened from the reference for a medical brand: no black utility bar,
+   near-white grounds throughout, the wordmark set as a pale tint rather
+   than solid black, and the portraits left in full colour. The reference
+   is a fashion label; a clinic needs the same structure with far less
+   weight.
+
+   Standalone — does not load styles.css. Re-declares the contracts
+   js/main.js depends on: .reveal/.is-in, [data-img]/.has-img.
+   ═══════════════════════════════════════════════════════════ */
+
+:root{
+  --ink:#0E0E0E;
+  --ink-2:#5A5A5A;          /* 7.1:1 on #FAFAF9 */
+  --paper:#FFFFFF;
+  --stone:#FAFAF9;          /* hero ground — near-white */
+  --rule:#E4E4E0;
+  --tint:#D9DED7;           /* the giant wordmark — a quiet green-grey, not black */
+  --accent:#1A5C1B;         /* brand green — the single accent */
+  --accent-600:#134714;
+  --paper-warm:#FBFAF7;     /* oval-hero ground — ink-2 sits at 6.6:1 on it */
+  --rule-soft:#EFEDE7;      /* the hero's column hairlines */
+
+  --f:'Archivo',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+  --wrap:1560px;
+  --pad:clamp(16px,3vw,44px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.55 var(--f);
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+img{display:block;max-width:100%}
+h1,h2,h3,p,figure,address{margin:0}
+nav a,a{color:inherit;text-decoration:none}
+address{font-style:normal}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:99;background:var(--ink);color:#fff;padding:12px 20px}
+.skip:focus{left:0}
+
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--pad);width:100%}
+.ph{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.has-img .ph{display:none}
+
+/* shared micro-label */
+.kick,.nav__note,.hero__eyebrow,.assure span,.cd p{
+  letter-spacing:.14em;text-transform:uppercase;
+}
+/* ───────── LOADER — heartbeat, then part left/right ───────── */
+.loader{
+  position:fixed;inset:0;z-index:200;
+  display:grid;place-items:center;
+  pointer-events:none;
+}
+.loader__half{
+  position:absolute;top:0;bottom:0;width:50.5%;
+  background:var(--paper);               /* light, not green */
+  transition:transform .9s cubic-bezier(.77,0,.18,1);
+}
+.loader__half--l{left:0}
+.loader__half--r{right:0}
+
+.loader__ecg{
+  position:relative;z-index:2;
+  width:min(60vw,320px);
+  transition:opacity .35s linear;
+}
+.loader__ecg path{
+  fill:none;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* layer 1: the full heartbeat, always visible, quiet dark grey —
+   this is the "first show in black" base trace */
+.loader__ecg .loader__base{
+  stroke:var(--ink);                     /* #0E0E0E — near black */
+  opacity:.18;                           /* faint, like a monitor history */
+}
+
+/* layer 2: the bright segment that flows along the path in brand green */
+.loader__ecg .loader__flow{
+  stroke:var(--accent);                  /* #1A5C1B — brand green */
+  stroke-dasharray:120 880;
+  animation:ecgTravel 1.5s linear infinite;
+  filter:drop-shadow(0 0 6px rgba(26,92,27,.35));
+}
+@keyframes ecgTravel{
+  from{stroke-dashoffset:1000}
+  to{stroke-dashoffset:0}
+}
+
+.loader.is-done .loader__half--l{transform:translateX(-101%)}
+.loader.is-done .loader__half--r{transform:translateX(101%)}
+.loader.is-done .loader__ecg{opacity:0}
+
+/* ───────── NAV — floating glass pill ───────── */
+/* ───────── NAV — circle that expands into a pill ───────── */
+.nav{
+  position:fixed;top:12px;left:0;right:0;z-index:50;
+  padding-inline:var(--pad);
+  pointer-events:none;
+  container-type:inline-size;                 /* lets the pill measure its own width (cqw) */
+  transform:translateY(calc(-100% - 24px));
+  transition:transform .6s cubic-bezier(.22,.61,.36,1);
+}
+.nav.is-stuck{transform:none}
+
+.nav__in{
+  --h:62px;                                   /* circle diameter = pill height */
+  --full:min(1240px,100cqw);                  /* pill width when open */
+  pointer-events:auto;position:relative;
+  display:flex;justify-content:center;align-items:center;
+  margin:0 auto;height:var(--h);width:var(--h);
+  overflow:hidden;
+  background:rgba(255,255,255,.78);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border:1px solid rgba(14,14,14,.07);
+  border-radius:999px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 40px -20px rgba(14,14,14,.28);
+  transition:width .9s cubic-bezier(.77,0,.18,1);
+}
+.nav.is-stuck .nav__in{width:var(--full);transition-delay:.45s}
+
+/* green dot shown while it is still a circle */
+.nav__in::after{
+  content:'';position:absolute;left:50%;top:50%;
+  width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 5px rgba(26,92,27,.16);
+  pointer-events:none;
+  transition:opacity .3s linear,transform .3s cubic-bezier(.22,.61,.36,1);
+}
+.nav.is-stuck .nav__in::after{opacity:0;transform:scale(.3);transition-delay:.45s}
+
+/* the real bar: fixed width, centred, revealed as the circle grows */
+.nav__row{
+  flex:none;width:calc(var(--full) - 2px);height:100%;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;
+  padding:0 8px 0 24px;
+}
+
+/* logo, links and button fade up one after another */
+.nav__logo,.nav__l,.nav__r{
+  opacity:0;transform:translateY(6px);
+  transition:opacity .3s linear,transform .5s cubic-bezier(.22,.61,.36,1);
+}
+.nav.is-stuck .nav__logo{opacity:1;transform:none;transition-delay:.85s}
+.nav.is-stuck .nav__l   {opacity:1;transform:none;transition-delay:.95s}
+.nav.is-stuck .nav__r   {opacity:1;transform:none;transition-delay:1.05s}
+
+.nav__logo{justify-self:start;display:flex;align-items:center}
+.nav__logo img{height:clamp(30px,2.6vw,40px);width:auto}
+
+.nav__l{display:flex;justify-content:center;gap:4px}
+.nav__l a{
+  padding:9px 16px;border-radius:999px;
+  font-size:14px;font-weight:500;letter-spacing:-.005em;color:var(--ink);
+  transition:background-color .18s linear,color .18s linear;
+}
+.nav__l a:hover{background:rgba(26,92,27,.09);color:var(--accent)}
+
+.nav__r{justify-self:end;display:flex;align-items:center;gap:clamp(12px,1.4vw,20px)}
+.nav__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  min-height:44px;padding:0 18px 0 22px;border-radius:999px;
+  background:#5096d0;color:#fff;
+  font-size:14px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;
+}
+.nav__tick{flex:none}
+
+/* phones / tablets: no circle, the pill fades and scales in instead
+   (two rows of content can't morph from a circle cleanly) */
+@media (max-width:900px){
+  .nav__in{
+    width:var(--full);height:auto;border-radius:28px;
+    opacity:0;transform:scale(.92);
+    transition:opacity .5s linear,transform .6s cubic-bezier(.22,.61,.36,1);
+  }
+  .nav.is-stuck .nav__in{opacity:1;transform:none;transition-delay:.1s}
+  .nav__in::after{display:none}
+  .nav__row{
+    width:100%;height:auto;
+    grid-template-columns:1fr auto;
+    grid-template-areas:"logo cta" "links links";
+    row-gap:6px;padding:8px 8px 8px 18px;
+  }
+  .nav__logo,.nav.is-stuck .nav__logo{grid-area:logo;opacity:1;transform:none;transition-delay:0s}
+  .nav__r,.nav.is-stuck .nav__r{grid-area:cta;opacity:1;transform:none;transition-delay:0s}
+  .nav__l,.nav.is-stuck .nav__l{
+    grid-area:links;justify-content:space-between;
+    opacity:1;transform:none;transition-delay:0s;
+    overflow-x:auto;scrollbar-width:none;
+    border-top:1px solid rgba(14,14,14,.07);padding-top:6px;margin-right:10px;
+  }
+  .nav__l::-webkit-scrollbar{display:none}
+  .nav__l a{padding:8px 12px;font-size:13px;white-space:nowrap}
+}
+@media (max-width:420px){
+  .nav__cta{padding:0 14px 0 16px;font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){
+  .nav,.nav__in,.nav__in::after,.nav__logo,.nav__l,.nav__r{
+    transition-duration:.001ms!important;transition-delay:0s!important;
+  }
+}
+/* ═══════════ HERO ═══════════
+   Grid holds the giant word, the figure and the corner labels in one
+   stacking context. The figure sits in the centre column and in front
+   of the word, so the letters are interrupted rather than overlapped. */
+.hero{background:var(--stone);overflow:hidden}
+.hero__in{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr minmax(0,clamp(300px,38vw,640px)) 1fr;
+  grid-template-rows:auto 1fr auto;
+  /* 100vh minus the sticky nav, so the hero lands on the fold rather than
+     just past it — a vh percentage ignores the nav and overshoots. */
+  min-height:clamp(600px,100vh,1020px);
+  /* Small top padding: the figure is contained and height-limited, so every
+     pixel here is a pixel off Dr. James. */
+  padding:calc(72px + clamp(12px,1.6vw,24px)) var(--pad) clamp(14px,2vw,30px);
+  align-items:end;
+}
+
+.hero__eyebrow{
+  grid-column:1;grid-row:1;align-self:start;
+  font-size:clamp(10px,1vw,12px);font-weight:600;line-height:2;color:var(--ink);
+  z-index:3;
+}
+.hero__rule{display:block;width:40px;height:2px;background:var(--ink);margin-top:14px}
+
+/* The wordmark spans all three columns and sits BEHIND the figure.
+   One continuous centred word — the figure covers its middle, so the letters
+   read as running behind him. Sized by vw so the whole string spans the
+   measure whatever its length: the text costs about 7.8px of width per 1px of
+   font size, so ~9.4vw keeps a 12-character string inside the wrap. */
+.hero__word{
+  grid-column:1/-1;grid-row:2/4;align-self:end;
+  display:flex;justify-content:center;align-items:baseline;
+  gap:0;
+  margin:0;z-index:1;pointer-events:none;
+  white-space:nowrap;flex-wrap:nowrap;
+  font-size:clamp(64px,19vw,300px);
+  font-weight:800;line-height:.76;letter-spacing:-.045em;
+  color:var(--tint);
+}
+.hero__word span{display:inline-block;white-space:nowrap}
+
+/* Figure: centre column, in front of the wordmark.
+   dr-james.webp is a background-removed cut-out, cropped tight to his alpha
+   bounding box — the supplied file carried 519px of transparent padding above
+   his head (20.5% of the canvas), which 'contain' faithfully rendered as empty
+   space. Keep any replacement cropped tight or that gap comes back. So:
+     - the box stretches the full height of the hero, starting at the top
+       of row 1, which puts his head just under the nav;
+     - background-size is CONTAIN, not cover — cover cropped him;
+     - position is bottom, so he stands on the hero's baseline at any height;
+     - no background colour, so the ground shows through the alpha and the
+       letters are interrupted by his silhouette rather than by a rectangle. */
+.hero__fig{
+  grid-column:2;grid-row:1/4;
+  z-index:2;align-self:stretch;
+  width:100%;
+  background:transparent center bottom/contain no-repeat;
+  display:grid;place-items:center;
+}
+
+/* ───────── Tall building cutout mode (assets/testing.webp) ───────── */
+.hero:has(.hero__fig--bldg) .hero__in,
+.hero:has([data-img*="testing"]) .hero__in{
+  grid-template-columns:1fr minmax(0,clamp(460px,65vw,1080px)) 1fr;
+  min-height:clamp(700px,100vh,1100px);
+}
+.hero__fig--bldg,
+.hero__fig[data-img*="testing"]{
+  width:clamp(520px,68vw,1120px);
+  min-height:clamp(580px,82vh,960px);
+  justify-self:center;
+  align-self:end;
+  background-size:contain!important;
+  background-position:center bottom!important;
+}
+
+/* ───────── Full-bleed background cover mode (index-new.html) ───────── */
+.hero.hero--cover,
+.hero:has(.hero__fig--cover){
+  position:sticky;
+  top:0;
+  z-index:1;
+  overflow:hidden;
+}
+.hero--cover .hero__in,
+.hero:has(.hero__fig--cover) .hero__in{
+  position:relative;
+  z-index:2;
+}
+.hero__fig--cover{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  grid-column:unset;
+  grid-row:unset;
+  background-size:cover!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  z-index:0;
+  margin:0;
+}
+.hero__fig--cover::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(250,250,249,0.72) 0%, rgba(250,250,249,0.85) 100%);
+  pointer-events:none;
+}
+
+/* The subject's name — the second-loudest thing in the hero after the
+   wordmark, so it carries the page. Right-aligned against a hairline, with
+   the name large, the role in the accent and the credentials quiet beneath. */
+.hero__meta{
+  grid-column:3;grid-row:1;align-self:start;justify-self:end;
+  text-align:right;z-index:3;
+  display:flex;flex-direction:column;align-items:flex-end;gap:2px;
+  padding-top:clamp(6px,1vw,14px);
+  border-top:2px solid var(--ink);
+}
+.hero__meta-name{
+  font-size:clamp(20px,2.2vw,38px);
+  font-weight:800;line-height:1.02;letter-spacing:-.025em;
+  text-transform:none;
+}
+.hero__meta-role{
+  margin-top:8px;
+  font-size:clamp(10px,0.95vw,12px);font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);
+}
+.hero__meta-qual{
+  font-size:clamp(10px,0.9vw,12px);font-weight:500;
+  letter-spacing:.04em;color:var(--ink-2);
+}
+
+
+/* ───────── BUTTONS / LINKS ───────── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  min-height:46px;padding:0 22px;
+  background:var(--accent);color:#fff;
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  transition:background-color 140ms linear;
+}
+.btn:hover{background:var(--accent-600)}
+.btn--dark,.btn--light{background:var(--accent);color:#fff}
+.btn--dark:hover,.btn--light:hover{background:var(--accent-600);color:#fff}
+.lnk{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:3px;
+}
+.lnk:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.lnk--sm{font-size:11px;border-bottom-color:var(--rule)}
+
+/* ───────── DOCTOR STRIP ───────── */
+.strip{background:var(--paper);border-block:1px solid var(--rule)}
+.strip__in{
+  display:grid;gap:clamp(20px,3vw,48px);
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  padding-block:clamp(26px,3.4vw,44px);
+}
+.dr{display:flex;gap:18px;align-items:flex-start}
+.dr__img{
+  flex:none;width:clamp(76px,7vw,104px);aspect-ratio:4/5;
+  background:var(--stone) center 15%/cover no-repeat;
+  display:grid;place-items:center;
+}
+
+.dr__txt h2{font-size:clamp(15px,1.3vw,18px);font-weight:700;letter-spacing:-.01em}
+.dr__txt p{margin-top:7px;font-size:13px;line-height:1.5;color:var(--ink-2)}
+.dr__txt .lnk{margin-top:12px;border-bottom-color:var(--rule)}
+.dr__txt .lnk:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ───────── SPLIT STATEMENT — modern editorial card ───────── */
+.split {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  align-items: center;
+  gap: clamp(24px, 4vw, 72px);
+  padding: clamp(56px, 8vw, 12px) clamp(20px, 5vw, 80px);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* Soft ambient shape behind the composition */
+.split::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 55%;
+  height: 120%;
+  background: radial-gradient(
+    circle at 60% 40%,
+    rgba(26, 92, 27, 0.07),
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Text card ── */
+.split__txt {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: clamp(36px, 4.5vw, 72px) clamp(28px, 4vw, 68px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    0 24px 48px -24px rgba(14, 14, 14, 0.14);
+  /* Pull the card up so it overlaps the image on large screens */
+  margin-right: clamp(-90px, -6vw, -40px);
+}
+
+/* Accent corner tick on the card */
+.split__txt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 0 0 2px 0;
+}
+
+.kick {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.split__txt h2 {
+  font-size: clamp(24px, 2.6vw, 38px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  max-width: 20ch;
+}
+
+.split__p {
+  font-size: clamp(15px, 1.05vw, 16.5px);
+  line-height: 1.72;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0;
+}
+
+.split__txt .btn {
+  margin-top: 12px;
+  align-self: flex-start;
+  border-radius: 2px;
+  box-shadow: 0 8px 18px -10px rgba(26, 92, 27, 0.55);
+}
+
+/* ── Image ── */
+.split__img {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  border-radius: 4px;
+  background: var(--rule) center/cover no-repeat;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 30px 60px -30px rgba(14, 14, 14, 0.28);
+}
+
+/* Subtle gradient wash at the bottom of the image for depth */
+.split__img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(14, 14, 14, 0.28) 0%,
+    transparent 45%
+  );
+  pointer-events: none;
+}
+
+.split__img .ph {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* ── Floating stat badge overlapping image + card ── */
+.split__badge {
+  position: absolute;
+  z-index: 3;
+  bottom: clamp(24px, 3vw, 48px);
+  left: 50%;
+  transform: translateX(-30%);
+  background: var(--ink);
+  color: #fff;
+  padding: 18px 26px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 20px 40px -18px rgba(14, 14, 14, 0.5);
+}
+
+.split__badge strong {
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1;
+  color: #fff;
+}
+
+.split__badge span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .split__txt {
+    margin-right: -40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: clamp(40px, 7vw, 72px) clamp(20px, 5vw, 40px);
+  }
+
+  .split__img {
+    order: -1;
+    aspect-ratio: 16 / 10;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .split__txt {
+    margin: 0;
+    border-radius: 0 0 4px 4px;
+    border-top: none;
+    box-shadow: 0 24px 48px -28px rgba(14, 14, 14, 0.18);
+  }
+
+  .split__txt h2 {
+    max-width: none;
+  }
+
+  .split__badge {
+    left: auto;
+    right: 24px;
+    bottom: auto;
+    top: -28px;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .split__badge {
+    right: 16px;
+    padding: 14px 20px;
+  }
+}
+
+/* ───────── ASSURANCE BAR ───────── */
+.assure{border-block:1px solid var(--rule);background:var(--paper)}
+.assure__in{
+  display:grid;gap:clamp(16px,2.4vw,40px);
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  padding-block:clamp(20px,2.6vw,34px);
+}
+.assure div{display:flex;flex-direction:column;gap:5px}
+.assure strong{font-size:clamp(14px,1.3vw,17px);font-weight:700;letter-spacing:-.01em}
+.assure span{font-size:10px;font-weight:600;color:var(--ink-2)}
+
+/* ───────── CARE GRID ───────── */
+.care{padding-block:clamp(44px,5.5vw,88px)}
+.care__hd{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+.care__hd h2{
+  font-size:clamp(24px,4.6vw,56px);
+  font-weight:800;
+  line-height:1.02;
+  letter-spacing:-.038em;
+  max-width:26ch;                     /* lets "Woman's life" wrap naturally */
+  text-wrap:balance;
+}
+  
+/* ───────── CARE CAROUSEL (3-up, centre card larger) ───────── */
+.care__grid{
+  --side-x:88%;
+  --side-s:.68;
+  position:relative;
+  display:block;
+  margin-top:clamp(22px,3vw,40px);
+  overflow:hidden;
+  padding:0;
+  touch-action:pan-y;
+}
+
+/* card — photo on top, content below */
+.cd{
+  position:absolute;top:0;left:50%;
+  width:clamp(280px,32%,560px);
+  height:100%;                        /* side cards stretch to grid height */
+  display:flex;flex-direction:column;
+  transform:translateX(-50%) scale(.5);
+  opacity:0;pointer-events:none;
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-radius:clamp(18px,2vw,26px);
+  padding:clamp(12px,1.2vw,18px);
+  overflow:hidden;                    /* so the full-bleed photo clips neatly */
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 36px -20px rgba(14,14,14,.22);
+  transition:
+    transform .75s cubic-bezier(.22,.61,.36,1),
+    opacity .6s linear,
+    padding .6s cubic-bezier(.22,.61,.36,1),
+    box-shadow .6s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
+}
+.cd[data-pos="0"]{
+  transform:translateX(-50%) scale(1);
+  opacity:1;pointer-events:auto;z-index:3;
+  padding:clamp(12px,1.2vw,18px);
+  box-shadow:0 2px 4px rgba(0,0,0,.05),0 34px 60px -26px rgba(14,14,14,.35);
+}
+.cd[data-pos="-1"]{
+  transform:translateX(calc(-50% - var(--side-x))) scale(var(--side-s));
+  opacity:.75;pointer-events:auto;cursor:pointer;z-index:2;
+}
+.cd[data-pos="1"]{
+  transform:translateX(calc(-50% + var(--side-x))) scale(var(--side-s));
+  opacity:.75;pointer-events:auto;cursor:pointer;z-index:2;
+}
+
+/* ── photo: morphs between a small top image (centre) and full-card (sides) ── */
+.cd__img{
+  position:relative;
+  aspect-ratio:16/9;                  /* centre card: small photo up top */
+  flex:none;
+  background:var(--stone) center/cover no-repeat;
+  display:grid;place-items:center;
+  border-radius:clamp(12px,1.4vw,18px);
+  overflow:hidden;
+  transition:
+    aspect-ratio .75s cubic-bezier(.22,.61,.36,1),
+    flex-grow .75s cubic-bezier(.22,.61,.36,1),
+    border-radius .6s cubic-bezier(.22,.61,.36,1),
+    background-size .75s cubic-bezier(.22,.61,.36,1);
+}
+.cd[data-pos="0"] .cd__img{
+  background-size:100%;
+}
+/* side cards: padding collapses and the photo eats the whole card */
+.cd[data-pos="-1"],.cd[data-pos="1"]{padding:0}
+.cd[data-pos="-1"] .cd__img,
+.cd[data-pos="1"] .cd__img{
+  aspect-ratio:auto;
+  flex:1 1 auto;                      /* fill all remaining card height */
+  border-radius:0;
+  background-size:112%;               /* slight zoom for depth */
+  filter:saturate(.85);
+}
+.cd[data-pos="-1"] .cd__img::after,
+.cd[data-pos="1"] .cd__img::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(14,14,14,.35) 0%,transparent 40%);
+  pointer-events:none;
+}
+/* soft hover lift on the focused side card */
+.cd[data-pos="-1"]:hover .cd__img,
+.cd[data-pos="1"]:hover .cd__img{background-size:105%}
+
+.cd__body{
+  flex:none;
+  max-height:320px;                   /* generous cap so 0fr-style collapse animates */
+  overflow:hidden;
+  display:flex;flex-direction:column;gap:8px;
+  padding:clamp(14px,1.6vw,22px) clamp(6px,1vw,12px) clamp(6px,1vw,10px);
+  opacity:1;
+  transform:none;
+  transition:
+    max-height .75s cubic-bezier(.22,.61,.36,1),
+    opacity .4s linear,
+    transform .6s cubic-bezier(.22,.61,.36,1),
+    padding .6s cubic-bezier(.22,.61,.36,1);
+}
+.cd[data-pos="-1"] .cd__body,
+.cd[data-pos="1"] .cd__body{
+  max-height:0;
+  padding-top:0;padding-bottom:0;
+  opacity:0;
+  transform:translateY(10px);
+}
+.cd__body h3{
+  font-size:clamp(17px,1.5vw,22px);
+  font-weight:800;letter-spacing:-.02em;color:var(--accent-600);
+}
+.cd__body p{
+  font-size:clamp(12.5px,1vw,14.5px);
+  line-height:1.55;color:var(--ink-2);
+  max-width:38ch;
+}
+/* staggered text entrance when a card reaches the centre */
+.cd__body h3,.cd__body p{
+  transition:opacity .45s linear,transform .55s cubic-bezier(.22,.61,.36,1);
+}
+.cd:not([data-pos="0"]) .cd__body h3,
+.cd:not([data-pos="0"]) .cd__body p{
+  opacity:0;transform:translateY(12px);
+}
+.cd[data-pos="0"] .cd__body h3{transition-delay:.30s}
+.cd[data-pos="0"] .cd__body p {transition-delay:.40s}
+/* ── Centre card (position 2): photo grows to the bottom, text below ── */
+
+/* give every card one tall stage so the centre photo has room to grow —
+   side cards were already flex-filling, so they just get a bit taller */
+.cd{
+  min-height:clamp(400px,34vw,620px);
+}
+
+/* photo stretches to fill all spare height; the text block is pushed to
+   the bottom of the card. aspect-ratio stays so the JS natural-height
+   measurement in layout() still returns a sane value before pinning. */
+.cd[data-pos="0"] .cd__img{
+  aspect-ratio:16/9;      /* fallback for measurement, flex overrides it */
+  flex:1 1 auto;
+  min-height:0;
+  background-size:cover;  /* override the old background-size:100% */
+}
+
+.care__nav{display:flex;gap:10px}
+.care__btn{
+  width:40px;height:40px;border-radius:50%;cursor:pointer;
+  border:1px solid var(--rule);background:var(--paper);color:var(--ink);
+  font-size:20px;line-height:1;display:grid;place-items:center;padding:0;
+  transition:background-color .18s linear,color .18s linear,border-color .18s linear;
+}
+.care__btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+@media (max-width:720px){
+  .cd{width:68%}
+  .care__grid{--side-x:92%;--side-s:.8}
+}
+@media (prefers-reduced-motion:reduce){
+  .cd{transition-duration:.001ms!important}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FACILITIES COLLAGE + TESTIMONIALS  (append AFTER your existing CSS)
+   Replaces the old .fac__hd / .fac__grid / .fx rules and the
+   testimonial card styling. Everything scales with the container
+   width (cqw), so the arch keeps its exact proportions.
+   ═══════════════════════════════════════════════════════════ */
+
+main > section.fac{background:var(--paper);border-top:1px solid var(--rule)}
+.fac{padding-block:clamp(40px,5vw,80px) clamp(24px,3vw,48px)}
+
+/* ───────── collage ───────── */
+.fc{container-type:inline-size;position:relative}
+.fc__cols{
+  --u:1cqw;
+  position:relative;
+  display:flex;justify-content:center;align-items:flex-start;
+  gap:calc(var(--u)*1);
+  height:calc(var(--u)*37);
+}
+.fc__col{
+  flex:none;width:calc(var(--u)*10.7);
+  display:flex;flex-direction:column;gap:calc(var(--u)*1.1);
+}
+.fc__t{
+  flex:1 1 0;min-height:0;margin:0;
+  border-radius:calc(var(--u)*1.2);
+  background:var(--rule) center/cover no-repeat;
+  display:grid;place-items:center;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.05);
+}
+.fc__t .ph{font-size:calc(var(--u)*.8);text-align:center;padding:4px}
+
+/* the arch: column heights + vertical offsets */
+.fc__col:nth-child(1){height:calc(var(--u)*28.8);margin-top:calc(var(--u)*4)}
+.fc__col:nth-child(2){height:calc(var(--u)*34.6);margin-top:calc(var(--u)*2.5)}
+.fc__col:nth-child(3){height:calc(var(--u)*21.1);margin-top:calc(var(--u)*4)}
+.fc__col:nth-child(4){height:calc(var(--u)*21.3);margin-top:0}
+.fc__col:nth-child(5){height:calc(var(--u)*21);margin-top:calc(var(--u)*.3)}
+.fc__col:nth-child(6){height:calc(var(--u)*21.1);margin-top:calc(var(--u)*4.2)}
+.fc__col:nth-child(7){height:calc(var(--u)*34.6);margin-top:calc(var(--u)*2.5)}
+.fc__col:nth-child(8){height:calc(var(--u)*28.8);margin-top:calc(var(--u)*4)}
+
+/* centred label, sitting in the gap under the two tallest middle tiles */
+.fc__center{
+  position:absolute;left:50%;top:calc(1cqw*25.2);
+  transform:translateX(-50%);
+  width:calc(1cqw*24);
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(1cqw*1.6);
+}
+.fc__center.reveal{transform:translateX(-50%) translateY(12px)}
+.fc__center.reveal.is-in{transform:translateX(-50%)}
+.fc__pill{
+  padding:calc(1cqw*.55) calc(1cqw*1.4);
+  border:1px solid #AEBBE0;border-radius:calc(1cqw*.6);
+  background:#fff;color:var(--ink);
+  font-size:clamp(11px,1.35cqw,15px);font-weight:500;white-space:nowrap;
+}
+.fc__center h2{
+  font-size:clamp(17px,2.9cqw,42px);font-weight:600;
+  line-height:1.2;letter-spacing:-.02em;color:#2B2B2B;
+}
+
+/* phones: keep the four middle columns, enlarge them, label drops below */
+@media (max-width:720px){
+  .fc__cols{--u:2.2cqw}
+  .fc__col:nth-child(1),.fc__col:nth-child(2),
+  .fc__col:nth-child(7),.fc__col:nth-child(8){display:none}
+  .fc__cols{height:calc(var(--u)*26)}
+  .fc__center{
+    position:static;transform:none;width:auto;margin-top:20px;
+  }
+  .fc__center.reveal,.fc__center.reveal.is-in{transform:none}
+  .fc__center h2{font-size:clamp(22px,6.4vw,30px)}
+  .fc__pill{font-size:12px}
+}
+
+
+
+/* ───────── TESTIMONIALS ───────── */
+.tst{padding-block:clamp(56px,7vw,112px) clamp(56px,7vw,104px);padding-top:3px;}
+.tst__hd{display:flex;align-items:flex-end;justify-content:flex-end;gap:20px;flex-wrap:wrap;}
+.tst__hd h2{margin-top:12px;font-size:clamp(30px,4vw,56px);font-weight:800;line-height:1;letter-spacing:-.035em}
+.tst__track{
+  margin-top:clamp(24px,3.4vw,48px);
+  display:flex;gap:clamp(12px,1.6vw,22px);
+  overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+  padding-bottom:10px;
+}
+.tst__track::-webkit-scrollbar{display:none}
+.tc{
+  flex:0 0 clamp(280px,31vw,430px);scroll-snap-align:start;
+  display:flex;flex-direction:column;justify-content:space-between;gap:28px;
+  min-height:clamp(280px,26vw,360px);
+  padding:clamp(24px,2.6vw,40px);
+  border-radius:clamp(20px,2.2vw,30px);
+  background:var(--stone);border:1px solid var(--rule);
+  transition:transform .5s cubic-bezier(.22,.61,.36,1),box-shadow .5s cubic-bezier(.22,.61,.36,1);
+}
+.tc:hover{transform:translateY(-4px);box-shadow:0 34px 56px -36px rgba(14,14,14,.35)}
+.tc__stars{color:var(--accent);font-size:18px;letter-spacing:.14em}
+.tc blockquote{
+  margin:0;flex:1;
+  font-size:clamp(17px,1.5vw,22px);font-weight:600;line-height:1.4;letter-spacing:-.018em;
+}
+.tc footer{display:flex;align-items:center;gap:14px}
+.tc__av{
+  flex:none;width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--accent);color:#fff;font-weight:700;
+}
+.tc footer span:last-child{display:flex;flex-direction:column;gap:2px}
+.tc footer strong{font-size:15px;font-weight:700}
+.tc footer em{font-style:normal;font-size:12px;color:var(--ink-2)}
+
+@media (max-width:900px){
+  .fac__hd{grid-template-columns:1fr}
+  .fac__grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(150px,34vw,230px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .fx,.fx:hover,.tc,.tc:hover{transition:none;transform:none}
+}
+/* ───────── FOOTER — quiet luxury ───────── */
+.ft{
+  position:relative;z-index:2;overflow:hidden;
+  background:var(--stone);border-top:1px solid var(--rule);
+  padding-top:clamp(48px,6vw,96px);
+}
+.ft__top{
+  display:grid;
+  grid-template-columns:1.5fr .8fr 1.1fr 1fr;
+  gap:clamp(28px,4vw,72px);
+  padding-bottom:clamp(40px,5vw,80px);
+}
+.ft__brand{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.ft__logo{height:clamp(48px,4.4vw,64px);width:auto}
+.ft__brand p{max-width:32ch;font-size:15px;line-height:1.65;color:var(--ink-2)}
+.ft__book{
+  display:inline-flex;align-items:center;gap:10px;margin-top:6px;
+  padding-bottom:4px;border-bottom:1px solid var(--ink);
+  font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  transition:color .2s linear,border-color .2s linear;
+}
+.ft__book i{font-style:normal;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.ft__book:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.ft__book:hover i{transform:translateX(4px)}
+
+.ft__col{display:flex;flex-direction:column;align-items:flex-start;gap:12px;font-size:15px;line-height:1.6;color:var(--ink)}
+.ft__col h3{
+  margin-bottom:6px;
+  font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);
+}
+.ft__col a{position:relative;transition:color .2s linear}
+.ft__col a::after{
+  content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform .35s cubic-bezier(.22,.61,.36,1);
+}
+.ft__col a:hover{color:var(--accent)}
+.ft__col a:hover::after{transform:scaleX(1)}
+
+.ft__bar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 28px;
+  padding-block:22px;border-top:1px solid var(--rule);
+  font-size:12px;color:var(--ink-2);
+}
+.ft__bar a{transition:color .2s linear}
+.ft__bar a:hover{color:var(--accent)}
+.ft__up i{font-style:normal;display:inline-block;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.ft__up:hover i{transform:translateY(-3px)}
+
+/* giant faint wordmark, cropped by the bottom edge */
+.ft__mark{
+  margin-top:clamp(8px,2vw,28px);
+  text-align:center;white-space:nowrap;user-select:none;pointer-events:none;
+  font-size:clamp(90px,26vw,420px);font-weight:900;
+  line-height:.74;letter-spacing:-.05em;
+  color:#ECEDE9;
+  height:.58em;overflow:hidden;
+}
+
+@media (max-width:900px){
+  .ft__top{grid-template-columns:1fr 1fr}
+  .ft__brand{grid-column:1/-1}
+}
+@media (max-width:480px){
+  .ft__top{grid-template-columns:1fr}
+  .ft__bar{flex-direction:column;align-items:flex-start}
+}
+
+/* ───────── SCROLL REVEAL (main.js contract) ───────── */
+.reveal{opacity:0;transform:translateY(12px);
+  transition:opacity 420ms cubic-bezier(.22,.61,.36,1),transform 420ms cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--reveal-delay,0ms)}
+.reveal.is-in{opacity:1;transform:none}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width:900px){
+  .split,.band{grid-template-columns:1fr}
+  .band__img{order:-1}
+  .nav__in{grid-template-columns:auto 1fr;row-gap:10px}
+  .nav__logo{justify-self:start;order:-1}
+  .nav__l{order:1}
+  .nav__r{order:2}
+}
+@media (max-width:720px){
+  /* The three-column hero collapses: the word sits under the figure rather
+     than behind it — at this width a figure wide enough to interrupt the
+     letters would leave each half too narrow to read. */
+  .hero__in{
+    grid-template-columns:1fr;grid-template-rows:auto auto auto auto;
+    min-height:0;row-gap:18px;align-items:start;
+  }
+  .hero__eyebrow,.hero__word,.hero__fig,.hero__meta{grid-column:1}
+  .hero__eyebrow{grid-row:1}
+  .hero__meta{grid-row:2;justify-self:start;text-align:left;align-items:flex-start}
+  .hero__fig{grid-row:3;aspect-ratio:3/4;max-width:none;background-size:contain}
+  .hero__word{grid-row:4;font-size:clamp(56px,19vw,110px);justify-content:flex-start;padding-bottom:clamp(20px,4vw,36px)}
+  .dr{gap:14px}
+}
+
+/* ═══════════ TOUCH + REDUCED MOTION ═══════════ */
+@media (pointer:coarse){
+  .nav__l a,.lnk,.ft__addr a,.ft__alts a,.nav__logo{min-height:44px;display:inline-flex;align-items:center}
+  .nav__cta{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .reveal{opacity:1!important;transform:none!important}
+  .cd:hover .cd__img{transform:none}
+}
+/* ───────── HERO LOAD ANIMATIONS ───────── */
+
+/* 1. Define the keyframes for pushing up and sliding from the sides */
+@keyframes heroPushUp {
+  0% { opacity: 0; transform: translateY(60px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroSlideInFromLeft {
+  0% { opacity: 0; transform: translateX(-40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroSlideInFromRight {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* 2. Apply animations to the hero elements with staggered delays */
+
+/* First: The Doctor's portrait pushes up */
+.hero__fig {
+  animation: heroPushUp 1s cubic-bezier(.22,.61,.36,1) 0.1s backwards;
+}
+
+/* Second: The giant ACME wordmark pushes up right behind him */
+.hero__word {
+  animation: heroPushUp 1s cubic-bezier(.22,.61,.36,1) 0.3s backwards;
+}
+
+/* Third: The left eyebrow text slides in from the left edge */
+.hero__eyebrow {
+  animation: heroSlideInFromLeft 0.9s cubic-bezier(.22,.61,.36,1) 0.5s backwards;
+}
+
+/* Fourth: The right meta/credentials text slides in from the right edge */
+.hero__meta {
+  animation: heroSlideInFromRight 0.9s cubic-bezier(.22,.61,.36,1) 0.7s backwards;
+}
+
+section[id],footer[id]{scroll-margin-top:84px}
+/* the fixed nav wraps to two rows on small screens — clear it there */
+@media (max-width:900px){.hero__in{padding-top:150px}}
+
+/* ═══════════ APPLE-STYLE PINNED HERO ═══════════ */
+.hero{
+  position:sticky;top:0;z-index:1;
+  background:var(--stone);
+}
+main > section:not(.hero){
+  position:relative;z-index:2;background:var(--paper);
+}
+.band{background:var(--stone)}
+.strip{box-shadow:0 -30px 60px -30px rgba(14,14,14,.22)}
+.ft{position:relative;z-index:2;background:var(--paper)}
+
+/* ═══════════════════════════════════════════════════════════
+   DR. JAMES'S PERSPECTIVE — editorial issue (v3)
+   Replaces the old "Apple bento" block in css/bold.css.
+
+   v3:
+     - removed the right-hand lede and the small kick — the header is
+       now just the big title;
+     - the outlined PERSPECTIVE watermark is anchored to the GRID
+       (not the section), so it sits behind the quote card and the
+       photo and peeks out around them at any viewport height.
+   ═══════════════════════════════════════════════════════════ */
+
+.persp{
+  position:relative;overflow:hidden;
+  padding-block:clamp(48px,6vw,96px) clamp(20px,2.4vw,40px);
+  border-top:1px solid var(--rule);
+  background:linear-gradient(180deg,var(--paper) 0%,var(--stone) 100%);
+}
+.persp .wrap{position:relative;z-index:1}
+
+/* ── Header: just the title ── */
+.persp__hd-row{margin:0}
+.persp__hd{
+  font-size:clamp(36px,5.6vw,86px);font-weight:800;line-height:.96;letter-spacing:-.042em;
+}
+
+/* ── Grid ── */
+.persp__grid{
+  position:relative;                  /* anchor for the watermark */
+  margin-top:clamp(32px,4.5vw,64px);
+  display:grid;grid-template-columns:1.15fr 1fr;
+  gap:clamp(16px,2.2vw,40px);
+  align-items:stretch;
+}
+/* Ghost wordmark — hairline outline echoing the hero wordmark.
+   Centred on the grid itself, so the cards overlap it and it bleeds
+   off both edges (the section clips it). */
+.persp__grid::before{
+  content:"PERSPECTIVE";
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:clamp(110px,13.5vw,250px);font-weight:800;line-height:1;letter-spacing:-.045em;
+  color:transparent;-webkit-text-stroke:1.5px var(--rule);
+  white-space:nowrap;pointer-events:none;user-select:none;z-index:0;
+}
+
+/* ── Quote card ── */
+.persp__q{
+  position:relative;z-index:1;        /* above the watermark */
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:clamp(30px,4vw,64px);
+  background:var(--paper);border:1px solid var(--rule);border-radius:6px;
+  box-shadow:0 1px 2px rgba(0,0,0,.02),0 24px 48px -24px rgba(14,14,14,.12);
+  overflow:hidden;
+}
+.persp__q::before{ /* accent corner tick, matches the split card */
+  content:"";position:absolute;top:0;left:0;width:44px;height:3px;background:var(--accent);
+}
+.persp__q::after{ /* oversized quote mark, quiet paper tint */
+  content:"\201C";position:absolute;top:-.14em;right:clamp(8px,1.6vw,28px);
+  font-size:clamp(140px,12vw,240px);font-weight:800;line-height:1;
+  color:var(--stone);pointer-events:none;z-index:0;
+}
+.persp__quote{
+  position:relative;z-index:1;
+  margin:clamp(20px,3vw,44px) 0 0;max-width:24ch;
+  font-size:clamp(23px,2.4vw,38px);font-weight:700;
+  line-height:1.22;letter-spacing:-.024em;
+}
+/* words start pale, turn ink as you scroll (js/hero-scroll.js adds .on) */
+.persp__quote .w{color:#D3D8D0;transition:color .35s linear}
+.persp__quote .w.on{color:var(--ink)}
+
+.persp__foot{
+  position:relative;z-index:1;
+  margin-top:clamp(28px,3.4vw,52px);padding-top:22px;
+  border-top:1px solid var(--rule);
+  display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;
+}
+.persp__sig{display:flex;flex-direction:column;gap:4px;margin:0}
+.persp__sig strong{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.persp__sig span{
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);
+}
+/* outline pill — fits the site's editorial buttons */
+.persp__link{
+  display:inline-flex;align-items:center;gap:8px;
+  min-height:44px;padding:0 22px;border-radius:999px;
+  border:1px solid var(--ink);color:var(--ink);
+  font-size:13px;font-weight:600;letter-spacing:.02em;
+  transition:background-color .18s linear,color .18s linear,border-color .18s linear;
+}
+.persp__link i{font-style:normal;transition:transform .25s cubic-bezier(.22,.61,.36,1)}
+.persp__link:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.persp__link:hover i{transform:translateX(3px)}
+
+/* ── Photo card — full-bleed, no chip over the face ── */
+.persp__p{
+  position:relative;z-index:1;        /* above the watermark */
+  overflow:hidden;margin:0;
+  border-radius:6px;border:1px solid var(--rule);
+  background:var(--rule);
+  box-shadow:0 1px 2px rgba(0,0,0,.03),0 30px 60px -32px rgba(14,14,14,.28);
+}
+/* subtle depth wash so the stat chips sit comfortably */
+.persp__p::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to top,rgba(14,14,14,.22) 0%,transparent 38%);
+}
+/* The photo is a full scene, not a cut-out: cover, anchored near the
+   head (center 22%). If you ever swap in an alpha cut-out, switch this
+   back to `center bottom/contain` and drop the ::after wash. */
+.persp__cut{
+  position:absolute;inset:0;
+  background:transparent center 22%/cover no-repeat;
+  display:grid;place-items:center;
+  transition:transform .8s cubic-bezier(.22,.61,.36,1);
+}
+.persp__p:hover .persp__cut{transform:scale(1.03)}
+/* dark stat chips, top-right */
+.persp__stats{
+  position:absolute;top:clamp(14px,1.6vw,22px);right:clamp(14px,1.6vw,22px);z-index:2;
+  display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none;
+}
+.persp__stats li{
+  display:flex;align-items:baseline;gap:8px;
+  padding:9px 14px;border-radius:999px;
+  background:rgba(14,14,14,.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:#fff;
+}
+.persp__stats strong{font-size:14px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.persp__stats span{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.62);
+}
+
+/* ── Responsive ── */
+@media (max-width:900px){
+  .persp__grid{grid-template-columns:1fr}
+  .persp__p{min-height:clamp(380px,92vw,520px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .persp__quote .w{color:var(--ink);transition:none}
+  .persp__cut{transition:none}
+}
+
+
+
+/* ───────── FAQ ACCORDION ───────── */
+.faq{padding-block:clamp(20px,2.4vw,40px) clamp(48px,6vw,96px)}
+
+.faq__in{
+  display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:clamp(24px,4vw,72px);align-items:start;
+}
+
+.faq__list{border-top:1px solid var(--rule)}
+.fq{border-bottom:1px solid var(--rule)}
+.fq__q{
+  width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:clamp(14px,2vw,26px);
+  padding:clamp(18px,2.2vw,28px) 0;
+  background:none;border:0;cursor:pointer;text-align:left;font:inherit;color:inherit;
+}
+.fq__head{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.fq__tag{
+  padding:6px 13px;border-radius:999px;
+  background:rgba(26,92,27,.1);color:var(--accent);
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+.fq__title{
+  font-size:clamp(18px,1.8vw,26px);font-weight:700;
+  line-height:1.14;letter-spacing:-.025em;
+  transition:color .2s linear;
+}
+.fq__q:hover .fq__title{color:var(--accent)}
+
+/* + button that turns into − */
+.fq__ico{
+  position:relative;flex:none;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--rule);background:var(--paper);
+  transition:background-color .25s linear,border-color .25s linear,transform .5s cubic-bezier(.22,.61,.36,1);
+}
+.fq__ico::before,.fq__ico::after{
+  content:'';position:absolute;left:50%;top:50%;
+  width:14px;height:2px;margin:-1px 0 0 -7px;border-radius:2px;
+  background:var(--ink);
+  transition:transform .4s cubic-bezier(.22,.61,.36,1),background-color .25s linear;
+}
+.fq__ico::after{transform:rotate(90deg)}
+.fq__q:hover .fq__ico{border-color:var(--accent)}
+.fq.is-open .fq__ico{background:var(--accent);border-color:var(--accent);transform:rotate(180deg)}
+.fq.is-open .fq__ico::before,.fq.is-open .fq__ico::after{background:#fff}
+.fq.is-open .fq__ico::after{transform:rotate(0deg)}
+
+/* smooth height: animate the grid row 0fr → 1fr */
+.fq__a{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .55s cubic-bezier(.22,.61,.36,1);
+}
+.fq.is-open .fq__a{grid-template-rows:1fr}
+.fq__a-in{
+  min-height:0;overflow:hidden;visibility:hidden;
+  transition:visibility 0s .55s;
+}
+.fq.is-open .fq__a-in{visibility:visible;transition-delay:0s}
+.fq__a p{
+  max-width:50ch;padding-bottom:clamp(20px,2.4vw,30px);
+  font-size:clamp(14px,1.05vw,16px);line-height:1.7;color:var(--ink-2);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s linear,transform .5s cubic-bezier(.22,.61,.36,1);
+}
+.fq.is-open .fq__a p{opacity:1;transform:none;transition-delay:.15s}
+.fq__more{display:inline-flex;align-items:center;gap:4px;margin-left:4px;font-weight:600;color:var(--accent);white-space:nowrap}
+.fq__more i{font-style:normal;font-size:19px;line-height:1;transition:transform .25s cubic-bezier(.22,.61,.36,1)}
+.fq__more:hover{text-decoration:underline;text-underline-offset:4px}
+.fq__more:hover i{transform:translateX(3px)}
+
+/* ───────── MANYATA CERTIFIED ───────── */
+.cert{padding-block:clamp(20px,2.4vw,40px);border-top:1px solid var(--rule)}
+.cert__in{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);
+  gap:clamp(28px,5vw,88px);align-items:center;
+}
+.cert__media{position:relative}
+/* dotted pattern peeking out behind the certificate */
+.cert__media::before{
+  content:'';position:absolute;left:clamp(-34px,-2.4vw,-16px);bottom:clamp(-30px,-2vw,-14px);
+  width:min(46%,170px);aspect-ratio:1;
+  background:radial-gradient(circle,rgba(26,92,27,.3) 2px,transparent 2.6px) 0 0/22px 22px;
+}
+.cert__plate{
+  position:relative;z-index:1;aspect-ratio:10/7;
+  background:var(--stone) center/cover no-repeat;
+  display:grid;place-items:center;
+  box-shadow:0 2px 4px rgba(0,0,0,.05),0 30px 60px -30px rgba(14,14,14,.4);
+}
+.cert__txt{display:flex;flex-direction:column;gap:clamp(14px,1.6vw,22px)}
+.cert__kick{display:flex;align-items:center;gap:14px;font-size:14px;letter-spacing:.04em;text-transform:none}
+.cert__kick::before{content:'';width:44px;height:2px;background:var(--accent)}
+.cert__txt h2{font-size:clamp(34px,4.6vw,66px);font-weight:800;line-height:1;letter-spacing:-.035em}
+.cert__txt p:last-child{max-width:54ch;font-size:clamp(16px,1.3vw,19px);line-height:1.7;color:var(--ink-2)}
+
+@media (max-width:900px){
+  .faq__in,.cert__in{grid-template-columns:1fr}
+  .vid{position:static}
+}
+@media (prefers-reduced-motion:reduce){
+  .fq__a,.fq__a p,.fq__ico,.fq__ico::before,.fq__ico::after{transition-duration:.001ms!important;transition-delay:0s!important}
+  .vid__play::after{animation:none}
+}
+
+/* ───────── FAQ VIDEO ───────── */
+.vid{position:sticky;top:110px;margin:0}
+.vid__frame{
+  position:relative;overflow:hidden;
+  aspect-ratio:16/10;                       /* use 9/16 for a vertical reel */
+  border-radius:clamp(22px,2.4vw,34px);
+  background:
+    radial-gradient(90% 70% at 100% 0%, rgba(120,200,120,.22), transparent 60%),
+    linear-gradient(160deg,#1F6B20 0%,#134714 55%,#0C300D 100%);
+  box-shadow:0 40px 70px -40px rgba(12,48,13,.6);
+}
+.vid__frame iframe,.vid__frame video{
+  position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;
+}
+.vid__ph{position:absolute;inset:0;display:grid;place-items:center;color:#fff}
+.vid__tag{
+  position:absolute;top:clamp(16px,2vw,28px);left:clamp(16px,2vw,28px);
+  padding:7px 14px;border-radius:999px;
+  background:rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+.vid__play{
+  position:relative;width:clamp(68px,7vw,96px);aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;padding:0;cursor:pointer;border:0;
+  background:#fff;color:var(--accent);
+  box-shadow:0 18px 40px -14px rgba(0,0,0,.5);
+  transition:transform .35s cubic-bezier(.22,.61,.36,1);
+}
+.vid__play svg{margin-left:4px}
+.vid__play::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(255,255,255,.6);
+  animation:vidPulse 2.2s cubic-bezier(.22,.61,.36,1) infinite;
+}
+.vid__play:hover{transform:scale(1.08)}
+@keyframes vidPulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+.vid__ph-note{
+  position:absolute;bottom:clamp(14px,1.8vw,24px);right:clamp(16px,2vw,28px);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);
+}
+.vid__cap{display:flex;flex-direction:column;gap:3px;margin-top:16px}
+.vid__cap strong{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.vid__cap span{font-size:13px;color:var(--ink-2)}
+/* ───────── MOBILE: lift the doctor into the empty space ───────── */
+/* ───────── MOBILE: doctor in the empty right area, no overlap ───────── */
+@media (max-width:720px){
+  .hero__eyebrow,.hero__meta{position:relative;z-index:3}
+
+  /* keep the name in the left half; "Dr. James / Elangbam" wraps to 2 lines */
+  .hero__meta{max-width:46%}
+  .hero__meta-name{font-size:clamp(20px,6vw,26px)}
+
+  /* smaller figure, pinned right, lifted beside the service list */
+  .hero__fig{
+    width:64%;
+    justify-self:end;
+    margin-top:clamp(-260px,-58vw,-170px);
+    aspect-ratio:3/4.1;
+    background-position:right bottom;
+    position:relative;
+    z-index:2;
+  }
+
+  .hero__fig--bldg,
+  .hero__fig[data-img*="testing"]{
+    width:clamp(280px,86vw,460px)!important;
+    min-height:clamp(260px,58vw,380px)!important;
+    aspect-ratio:4/3.1!important;
+    justify-self:center!important;
+    margin-top:clamp(-190px,-42vw,-110px)!important;
+    background-position:center bottom!important;
+  }
+
+  .hero__fig--cover{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    margin-top:0!important;
+    aspect-ratio:unset!important;
+    background-size:cover!important;
+    background-position:center!important;
+    z-index:0!important;
+  }
+
+  .hero__space{display:none!important}     /* remove space on mobile so it's one word ACME */
+
+  .hero__word{
+    grid-column:1/-1;
+    max-width:none;
+    justify-content:flex-start;            /* starts aligned with the left credentials */
+    align-self:end;
+    margin-top:clamp(-95px,-22vw,-50px);   /* pulled up into the empty area under credentials */
+    padding-bottom:clamp(12px,3vw,26px);
+    z-index:1;                             /* sits UNDER the doctor's photo (z-index:2) */
+    font-size:clamp(68px,21vw,108px)!important; /* much larger, prominent editorial wordmark */
+    line-height:.76;
+    letter-spacing:-.12em;
+    gap:0!important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO — floating glass card  (direction 08)
+
+   The photograph runs full bleed and the copy sits on a frosted card
+   rather than directly on the image. That is a contrast decision, not a
+   stylistic one: assets/day-building.jpg measures 0.40 luminance, so
+   dark text on the bare photo is 7.9:1 but white text is only 2.3:1.
+   Compositing 90% white over the photo lifts the card to ~0.90, which
+   puts --ink at about 16.5:1 and the green label at 7.3:1 — while the
+   picture itself stays bright and uncovered.
+
+   The card is the only thing holding type, so it carries the whole
+   hero: label, headline, lede, both actions and the figures.
+
+   Photo swap: background-image on .hero__media in the markup.
+   ═══════════════════════════════════════════════════════════ */
+
+.hero.hero--glass{
+  /* overrides the shared pinned-hero rule further up */
+  position:sticky;
+  top:0;
+  z-index:1;
+  min-height:100svh;
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-start;
+  overflow:hidden;
+  background:#f0f2f4;
+  isolation:isolate;
+}
+
+.hero--glass .hero__media{
+  position:absolute;inset:0;
+  background-position:center 60%;
+  background-size:cover;
+  background-repeat:no-repeat;
+  opacity:1 !important;
+}
+
+/* Fixed cloud background */
+.hero--glass .hero__media--cloud{
+  z-index:0;
+  transform:none !important;
+}
+
+/* Layer 2: Giant ACME wordmark — rises FIRST, letter by letter */
+.hero--glass .hero__wordmark{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding-top:calc(72px + clamp(10px, 2.5vh, 32px));
+  padding-inline:clamp(16px, 4.5vw, 80px);
+  pointer-events:none;
+  user-select:none;
+  font-family:'Archivo',var(--font-sans,system-ui,sans-serif);
+  font-size:clamp(110px, 25vw, 420px);
+  font-weight:800;
+  line-height:0.8;
+  color:rgba(101, 128, 152, 0.90);
+  will-change:transform;
+}
+
+.is-loaded .hero--glass .hero__wordmark span{ animation:heroLetterUp 1.2s cubic-bezier(.16,1,.3,1) backwards; }
+.is-loaded .hero--glass .hero__wordmark span:nth-child(1){animation-delay:.10s}
+.is-loaded .hero--glass .hero__wordmark span:nth-child(2){animation-delay:.20s}
+.is-loaded .hero--glass .hero__wordmark span:nth-child(3){animation-delay:.30s}
+.is-loaded .hero--glass .hero__wordmark span:nth-child(4){animation-delay:.40s}
+
+/* letters travel a short distance — they feel "settled" before the
+   building arrives, not like they're still moving */
+@keyframes heroLetterUp{
+  0%{
+    transform:translateY(clamp(40px, 8vh, 90px));
+    opacity:0;
+  }
+  35%{opacity:1}
+  100%{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+/* Layer 3: building — rises AFTER the letters have landed */
+.is-loaded .hero--glass .hero__media--building{
+  z-index:2;
+  animation:heroBuildingPushUp 1.8s cubic-bezier(.16,1,.3,1) .55s both;
+}
+@keyframes heroBuildingPushUp{
+  0%{
+    transform:translateY(100%);   /* entirely off-screen below the hero */
+    opacity:1;
+  }
+  100%{
+    transform:translateY(0);      /* seated at bottom 0 */
+    opacity:1;
+  }
+}
+
+/* Remove background opacity / gradient overlays completely */
+.hero--glass .hero__grad{
+  display:none !important;
+}
+
+.hero--glass .hero__in{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:3;
+  width:100%;
+  min-height:auto;
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-start;
+  padding:0 var(--pad) clamp(36px, 5.5vh, 60px);
+  pointer-events:none;
+}
+
+/* ───────── services text in the red circle area (bottom-left) ───────── */
+.hero--glass .hero__eyebrow{
+  grid-column:unset;
+  grid-row:unset;
+  align-self:flex-end !important;
+  pointer-events:auto;
+  margin:0;
+  font-family:var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size:clamp(11.5px, 0.95vw, 13.5px);
+  font-weight:700;
+  line-height:2.05;
+  letter-spacing:0.13em;
+  text-transform:uppercase;
+  color:#16181b;
+  text-shadow:0 1px 4px rgba(255,255,255,0.9);
+}
+
+.hero--glass .hero__rule{
+  display:block;
+  width:42px;
+  height:2px;
+  background:#16181b;
+  margin-top:14px;
+  box-shadow:0 1px 3px rgba(255,255,255,0.8);
+}
+
+/* ───────── entrance ─────────
+   Gated on .js (set by inline script) so a script failure degrades to
+   "everything visible" rather than a blank hero. */
+.js .hero--glass .hero__eyebrow,
+.js .hero--glass .hero__card{opacity:0;transform:translateY(16px)}
+.js .hero--glass.is-in .hero__eyebrow,
+.js .hero--glass.is-in .hero__card{
+  opacity:1;transform:none;
+  transition:opacity .6s cubic-bezier(.22,.7,.2,1),transform .7s cubic-bezier(.22,.7,.2,1);
+}
+.js .hero--glass .hero__media{
+  opacity:1 !important;
+}
+.js .hero--glass .hero__media--cloud{
+  transform:none !important;
+}
+
+/* ───────── narrow screens ───────── */
+@media (max-width:760px){
+  .hero--glass{align-items:flex-end}
+  .hero--glass .hero__in{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:0 var(--pad) clamp(20px, 4vh, 32px);
+  }
+  .hero--glass .hero__grad{display:none !important}
+  .hero--glass .hero__eyebrow{
+    font-size:11px;
+    line-height:1.9;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    padding:12px 16px;
+    border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.06);
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .js .hero--glass .hero__eyebrow,
+  .js .hero--glass .hero__card,
+  .js .hero--glass .hero__media{opacity:1;transform:none;transition:none}
+  .hero--glass .hero__media--building{animation:none !important;transform:none !important}
+}
+
+
+/* ───────── IMPACT CARDS — icon-led ───────── */
+.stats{
+  position:relative;z-index:2;background:var(--paper);
+  box-shadow:0 -30px 60px -30px rgba(14,14,14,.22);
+  padding-block:clamp(18px,2.4vw,36px);
+}
+.stats__in{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(10px,1.2vw,16px);
+}
+
+.stat{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:clamp(18px,1.8vw,26px) clamp(20px,2vw,28px);
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-radius:18px;
+  transition:transform .4s cubic-bezier(.22,.61,.36,1),box-shadow .4s cubic-bezier(.22,.61,.36,1),border-color .3s linear;
+}
+.stat:hover{
+  transform:translateY(-3px);
+  border-color:rgba(26,92,27,.35);
+  box-shadow:0 20px 40px -24px rgba(14,14,14,.28);
+}
+
+/* icon chip — tinted square, accent glyph */
+.stat__ico{
+  flex:none;
+  width:46px;height:46px;border-radius:13px;
+  display:grid;place-items:center;
+  background:rgba(26,92,27,.09);
+  color:var(--accent);
+  transition:background-color .3s linear,color .3s linear,transform .4s cubic-bezier(.22,.61,.36,1);
+}
+.stat:hover .stat__ico{
+  background:var(--accent);
+  color:#fff;
+  transform:scale(1.06) rotate(-3deg);
+}
+
+.stat__body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.stat__body strong{
+  font-size:clamp(24px,2.2vw,34px);
+  font-weight:800;line-height:1;letter-spacing:-.03em;
+  color:var(--ink);
+}
+.stat__body strong span{color:var(--accent-600)}
+.stat__body p{
+  font-size:clamp(12px,.95vw,13.5px);line-height:1.5;color:var(--ink-2);
+  max-width:26ch;
+}
+
+/* third card is a label, not a number — size it between the two */
+.stat:last-child .stat__body strong{
+  font-size:clamp(17px,1.5vw,21px);
+  line-height:1.15;letter-spacing:-.02em;
+  color:var(--accent-600);
+}
+
+@media (max-width:900px){
+  .stats__in{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .stat,.stat:hover,.stat__ico,.stat:hover .stat__ico{transition:none;transform:none}
+}
+
+
+/* ───────── NEWCONS — meet your doctors ───────── */
+.newcons{
+  position:relative;overflow:hidden;
+  background:var(--paper);
+  border-top:1px solid var(--rule);
+  padding-block:clamp(56px,7vw,120px);
+}
+/* faint ghost numeral backdrop, echoes the hero wordmark */
+.newcons::before{
+  content:'DOCTORS';
+  position:absolute;top:clamp(10px,2vw,30px);right:-.3em;
+  font-size:clamp(80px,14vw,200px);font-weight:800;line-height:1;
+  letter-spacing:-.05em;color:transparent;
+  -webkit-text-stroke:1px var(--rule-soft,#EFEDE7);
+  pointer-events:none;user-select:none;
+}
+
+/* — header — */
+.newcons__hd{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:18px 32px;margin-bottom:clamp(36px,5vw,72px);
+}
+.newcons__hd .kick{margin-bottom:16px}
+.newcons__hd h2{
+  font-size:clamp(32px,4.4vw,62px);
+  font-weight:800;line-height:1;letter-spacing:-.038em;
+}
+.newcons__hd h2 em{
+  font-family:'Newsreader',Georgia,serif;
+  font-style:italic;font-weight:500;letter-spacing:-.02em;
+  color:var(--accent);
+}
+.newcons__all{
+  display:inline-flex;align-items:center;gap:8px;
+  padding-bottom:4px;border-bottom:1px solid var(--ink);
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  transition:color .2s linear,border-color .2s linear;
+}
+.newcons__all i{font-style:normal;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.newcons__all:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.newcons__all:hover i{transform:translateX(4px)}
+
+/* — card grid — */
+.newcons__grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2vw,28px);
+  align-items:start;
+}
+/* staggered rhythm: middle and last cards sit lower */
+.newcons__card:nth-child(2){margin-top:clamp(28px,4vw,64px)}
+.newcons__card:nth-child(3){margin-top:clamp(56px,8vw,128px)}
+
+.newcons__card{
+  position:relative;
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-radius:clamp(18px,2vw,26px);
+  overflow:hidden;
+  transition:transform .6s cubic-bezier(.22,.61,.36,1),box-shadow .6s cubic-bezier(.22,.61,.36,1);
+}
+.newcons__card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 2px 4px rgba(0,0,0,.04),0 36px 64px -32px rgba(14,14,14,.3);
+}
+
+/* big quiet index numeral, top-right of each card */
+.newcons__idx{
+  position:absolute;top:14px;right:18px;z-index:3;
+  font-size:clamp(38px,3.6vw,58px);font-weight:800;line-height:1;
+  letter-spacing:-.04em;color:transparent;
+  -webkit-text-stroke:1.2px rgba(14,14,14,.22);
+  transition:-webkit-text-stroke-color .3s linear;
+  pointer-events:none;
+}
+.newcons__card:hover .newcons__idx{-webkit-text-stroke-color:var(--accent)}
+
+/* photo block */
+.newcons__img{
+  position:relative;aspect-ratio:4/4.4;
+  background:var(--stone) center 18%/cover no-repeat;
+  display:grid;place-items:center;
+  overflow:hidden;
+}
+/* green wash slides away on hover to reveal the photo */
+.newcons__img::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(26,92,27,.14) 0%,rgba(26,92,27,.30) 100%);
+  mix-blend-mode:multiply;
+  opacity:.7;
+  transition:opacity .5s linear;
+}
+.newcons__card:hover .newcons__img::after{opacity:0}
+.newcons__img .ph{position:relative;z-index:2}
+
+/* body */
+.newcons__body{
+  display:flex;flex-direction:column;gap:10px;
+  padding:clamp(20px,2.2vw,32px);
+}
+.newcons__role{
+  font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);
+}
+.newcons__name{
+  font-size:clamp(20px,1.9vw,28px);font-weight:800;letter-spacing:-.025em;line-height:1.1;
+}
+.newcons__qual{
+  font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:.01em;
+}
+.newcons__desc{
+  font-size:13.5px;line-height:1.65;color:var(--ink-2);
+  padding-top:6px;border-top:1px solid var(--rule-soft,#EFEDE7);
+}
+.newcons__lnk{
+  margin-top:8px;align-self:flex-start;
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding-bottom:3px;border-bottom:1px solid var(--ink);
+  transition:color .2s linear,border-color .2s linear;
+}
+.newcons__lnk i{font-style:normal;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.newcons__lnk:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.newcons__lnk:hover i{transform:translateX(4px)}
+
+/* — responsive — */
+@media (max-width:900px){
+  .newcons__grid{grid-template-columns:1fr 1fr}
+  .newcons__card:nth-child(2){margin-top:0}
+  .newcons__card:nth-child(3){margin-top:0}
+}
+@media (max-width:640px){
+  .newcons__grid{grid-template-columns:1fr}
+  .newcons::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .newcons__card,.newcons__card:hover{transition:none;transform:none}
+  .newcons__img::after{transition:none}
+}

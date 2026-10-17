@@ -14,11 +14,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&display=swap"
     />
-    <link rel="stylesheet" href="css/bold.css" />
+    <link rel="stylesheet" href="css/new-bold.css" />
+
+    <script>
+      document.documentElement.className += " js";
+    </script>
   </head>
   <body>
+    <!-- Loading screen: heartbeat, then curtains part left/right -->
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader__half loader__half--l"></div>
+      <div class="loader__half loader__half--r"></div>
+      <svg
+        class="loader__ecg"
+        viewBox="0 0 600 100"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          class="loader__base"
+          pathLength="1000"
+          d="M0,50 H170 L182,50 L190,36 L198,64 L206,8 L216,92 L224,50 L236,50 H600"
+        />
+        <path
+          class="loader__flow"
+          pathLength="1000"
+          d="M0,50 H170 L182,50 L190,36 L198,64 L206,8 L216,92 L224,50 L236,50 H600"
+        />
+      </svg>
+    </div>
     <a class="skip" href="#hero">Skip to content</a>
 
     <!-- ───────── NAV ───────── -->
@@ -33,15 +59,15 @@
           </a>
 
           <nav class="nav__l" aria-label="Primary">
-            <a href="#care">Care We Offers</a>
+            <a href="#care">Care we Offers</a>
             <a href="#team">Doctors</a>
             <a href="#perspectives">Perspectives</a>
             <a href="#facilities">Facilities</a>
           </nav>
 
           <div class="nav__r">
-            <a class="nav__cta" href="#certified">
-              Manyata certified
+            <a class="nav__cta" href="#care">
+              Manyata Certified
               <svg
                 class="nav__tick"
                 width="18"
@@ -63,84 +89,114 @@
     </header>
 
     <main>
-      <!-- ───────── HERO: giant wordmark, figure interrupting ───────── -->
-      <section class="hero" id="hero">
+      <section class="hero hero--glass" id="hero">
+        <!-- Layer 1: Fixed Cloud / Sky Background -->
+        <div
+          class="hero__media hero__media--cloud"
+          style="background-image: url(&quot;assets/cloud2.png&quot;)"
+          role="img"
+          aria-label="ACME Hospital Sky"
+        ></div>
+
+        <!-- Layer 2: ACME text in slate-blue that pushes up from bottom -->
+        <div class="hero__wordmark" aria-hidden="true">
+          <span>A</span><span>C</span><span>M</span><span>E</span>
+        </div>
+
+        <!-- Layer 3: Building cutout that pushes up from bottom on reload -->
+        <div
+          class="hero__media hero__media--building"
+          style="background-image: url(&quot;assets/building.webp&quot;)"
+          role="img"
+          aria-label="ACME Fertility &amp; Healthcare Centre, Imphal East"
+        ></div>
+
         <div class="wrap hero__in">
           <p class="hero__eyebrow">
             IVF AND FERTILITY<br />
-            OBS & GYNAE<br />
+            OBS &amp; GYNAE<br />
             GENERAL MEDICINE<br />
             PEDIATRIC CARE<br />
             GENERAL SURGERY<br />
             DENTAL<br />
             <span class="hero__rule" aria-hidden="true"></span>
           </p>
-
-          <h1 class="hero__word" aria-label="ACME Hospital">
-            <span aria-hidden="true" style="color: #62be6b">AC</span
-            ><span class="hero__space" aria-hidden="true">&nbsp;&nbsp;</span
-            ><span aria-hidden="true" style="color: #62be6b">ME</span>
-          </h1>
-
-          <figure class="hero__fig" data-img="assets/dr-james.webp">
-            <span class="ph">[Portrait: Dr. James Elangbam]</span>
-          </figure>
-
-          <p class="hero__meta">
-            <span class="hero__meta-name">Dr. James Elangbam</span>
-            <span class="hero__meta-role">Managing Director</span>
-            <span class="hero__meta-qual">MBBS, DNB (Obs &amp; Gynae)</span>
-          </p>
         </div>
       </section>
 
-      <!-- ───────── DOCTOR STRIP ───────── -->
-      <section class="strip" id="team">
-        <div class="wrap strip__in">
-          <article class="dr">
-            <div class="dr__img" data-img="assets/dr-mrinalini.webp">
-              <span class="ph">[Portrait]</span>
-            </div>
-            <div class="dr__txt">
-              <h2>Dr. Mrinalini Konjengbam</h2>
-              <p>
-                Medical Superintendent &amp; Chief Operating Officer.
-                Embryology. MBBS, MS (Human Anatomy).
-              </p>
-              <span class="lnk lnk--sm"
-                >Embryology <i aria-hidden="true">→</i></span
+      <!-- ───────── IMPACT / ASSURANCE CARDS ───────── -->
+      <section class="stats" id="stats">
+        <div class="wrap stats__in">
+          <article class="stat reveal">
+            <span class="stat__ico" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
+                <path
+                  d="M12 3c3.5 4 6 6.6 6 9.7A6 6 0 0 1 6 12.7C6 9.6 8.5 7 12 3Z"
+                />
+                <circle cx="12" cy="12.5" r="2.2" />
+              </svg>
+            </span>
+            <div class="stat__body">
+              <strong
+                ><span data-count="300" data-suffix="+">300+</span></strong
+              >
+              <p>IVF / ICSI procedures conducted</p>
             </div>
           </article>
 
-          <article class="dr">
-            <div class="dr__img" data-img="assets/dr-monika.webp">
-              <span class="ph">[Portrait]</span>
-            </div>
-            <div class="dr__txt">
-              <h2>Dr. Monika Naorem</h2>
-              <p>
-                Consultant Anaesthesiologist. Anaesthesia and perioperative
-                care. MBBS, Diploma in Anaesthesiology.
-              </p>
-              <span class="lnk lnk--sm"
-                >Anaesthesia <i aria-hidden="true">→</i></span
+          <article class="stat reveal" style="--reveal-delay: 80ms">
+            <span class="stat__ico" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
+                <circle cx="12" cy="12" r="3.2" />
+                <path d="M12 5.5V3M12 21v-2.5M5.5 12H3m18 0h-2.5" />
+                <circle cx="12" cy="12" r="8" stroke-dasharray="2.5 3.2" />
+              </svg>
+            </span>
+            <div class="stat__body">
+              <strong><span data-count="1196">1,196</span></strong>
+              <p>of 1,414 gynae surgeries by keyhole technique</p>
             </div>
           </article>
-          <article class="dr">
-            <div class="dr__img" data-img="assets/dr-james.webp">
-              <span class="ph">[Portrait]</span>
-            </div>
-            <div class="dr__txt">
-              <h2>Dr. James Elangbam</h2>
-              <p>
-                Managing Director · Chief Consultant. Fertility physician and
-                endoscopic gynaecologist. MBBS, DNB (Obs &amp; Gynae).
-              </p>
-              <span class="lnk lnk--sm"
-                >Read his perspectives <i aria-hidden="true">→</i></span
+
+          <article class="stat reveal" style="--reveal-delay: 160ms">
+            <span class="stat__ico" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
+                <path
+                  d="M12 20s-7-4.3-7-9.2C5 7.9 7.2 6 9.7 6c1.4 0 2.7.7 3.3 1.7h-2.1v2.2h3.2v-2C15.4 7 17.7 8 18.6 9.9"
+                />
+                <path d="M3 12h4l1.5-2.5 2 5L13 9l1.5 3H21" opacity=".9" />
+              </svg>
+            </span>
+            <div class="stat__body">
+              <strong>High-risk<br />pregnancy care</strong>
+              <p>A core strength of our obstetric team</p>
             </div>
           </article>
         </div>
@@ -173,10 +229,10 @@
           <span class="ph">[Photograph]</span>
         </div>
 
-        <div class="split__badge" aria-hidden="true">
+        <!-- <div class="split__badge" aria-hidden="true">
           <strong>300+</strong>
           <span>IVF &amp; ICSI</span>
-        </div>
+        </div> -->
       </section>
 
       <!-- ───────── ASSURANCE BAR ───────── -->
@@ -193,39 +249,139 @@
       <section class="care" id="care">
         <div class="wrap">
           <div class="care__hd">
-            <h2>Care we offer</h2>
-            <a class="lnk" href="#facilities"
-              >All facilities <i aria-hidden="true">→</i></a
-            >
+            <h2>
+              Specialist care for every stage of a<br /><em
+                >Woman&rsquo;s life</em
+              >
+            </h2>
           </div>
           <div class="care__grid">
             <article class="cd">
               <div class="cd__img" data-img="assets/facility-ivf.webp">
                 <span class="ph">[Photograph]</span>
               </div>
-              <h3>IVF &amp; Infertility</h3>
-              <p>IVF/ICSI, embryology, cryobank</p>
+              <div class="cd__body">
+                <h3>IVF &amp; Infertility</h3>
+                <p>
+                  Personalised fertility treatment, including IVF/ICSI,
+                  supported by our embryology team and cryobank.
+                </p>
+              </div>
             </article>
+
             <article class="cd">
               <div class="cd__img" data-img="assets/care-surgery.webp">
                 <span class="ph">[Photograph]</span>
               </div>
-              <h3>Keyhole Gynae Surgery</h3>
-              <p>Minimally invasive endoscopy</p>
+              <div class="cd__body">
+                <h3>Keyhole Gynae Surgery</h3>
+                <p>
+                  Minimally invasive endoscopic procedures, used in the large
+                  majority of our gynaecological surgeries.
+                </p>
+              </div>
             </article>
+
             <article class="cd">
               <div class="cd__img" data-img="assets/care-maternity.webp">
                 <span class="ph">[Photograph]</span>
               </div>
-              <h3>High-Risk Pregnancy</h3>
-              <p>Specialist obstetric monitoring</p>
+              <div class="cd__body">
+                <h3>High-Risk Pregnancy</h3>
+                <p>
+                  Close monitoring and specialist obstetric care for complicated
+                  pregnancies, with maternity packages available.
+                </p>
+              </div>
             </article>
+
             <article class="cd">
               <div class="cd__img" data-img="assets/facility-icu.webp">
                 <span class="ph">[Photograph]</span>
               </div>
-              <h3>Intensive Care</h3>
-              <p>Round-the-clock monitoring</p>
+              <div class="cd__body">
+                <h3>Intensive Care</h3>
+                <p>
+                  Round-the-clock critical care monitoring for mothers and
+                  newborns when it matters most.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── MEET YOUR DOCTORS ───────── -->
+      <section class="newcons" id="team">
+        <div class="wrap">
+          <div class="newcons__hd reveal">
+            <div>
+              <p class="kick">Meet your doctors</p>
+              <h2>The people who will<br /><em>care for you</em></h2>
+            </div>
+            <!-- <a
+              class="newcons__all"
+              href="mailto:contact@acmefertilitycentre.com?subject=Appointment%20request"
+            >
+              Request an appointment <i aria-hidden="true">→</i>
+            </a> -->
+          </div>
+
+          <div class="newcons__grid">
+            <article class="newcons__card reveal">
+              <div class="newcons__img" data-img="assets/dr-james.webp">
+                <span class="ph">[Portrait: Dr. James Elangbam]</span>
+              </div>
+              <div class="newcons__body">
+                <p class="newcons__role">
+                  Managing Director · Chief Consultant
+                </p>
+                <h3 class="newcons__name">Dr. James Elangbam</h3>
+                <p class="newcons__qual">MBBS, DNB (Obs &amp; Gynae)</p>
+                <p class="newcons__desc">
+                  Fertility physician &amp; endoscopic gynaecologist. Over a
+                  decade of building families in Imphal.
+                </p>
+                <a class="newcons__lnk" href="#perspectives"
+                  >Read his perspectives <i aria-hidden="true">→</i></a
+                >
+              </div>
+            </article>
+
+            <article class="newcons__card reveal" style="--reveal-delay: 100ms">
+              <div class="newcons__img" data-img="assets/dr-mrinalini.webp">
+                <span class="ph">[Portrait: Dr. Mrinalini Konjengbam]</span>
+              </div>
+              <div class="newcons__body">
+                <p class="newcons__role">Medical Superintendent · Embryology</p>
+                <h3 class="newcons__name">Dr. Mrinalini Konjengbam</h3>
+                <p class="newcons__qual">MBBS, MS (Human Anatomy)</p>
+                <p class="newcons__desc">
+                  Chief operating officer and head of the embryology laboratory
+                  behind our 300+ IVF &amp; ICSI procedures.
+                </p>
+                <a class="newcons__lnk" href="#care"
+                  >About embryology <i aria-hidden="true">→</i></a
+                >
+              </div>
+            </article>
+
+            <article class="newcons__card reveal" style="--reveal-delay: 200ms">
+              <div class="newcons__img" data-img="assets/dr-monika.webp">
+                <span class="ph">[Portrait: Dr. Monika Naorem]</span>
+              </div>
+              <div class="newcons__body">
+                <p class="newcons__role">Consultant Anaesthesiologist</p>
+                <h3 class="newcons__name">Dr. Monika Naorem</h3>
+                <p class="newcons__qual">MBBS, Diploma in Anaesthesiology</p>
+                <p class="newcons__desc">
+                  Anaesthesia and perioperative care — keeping every keyhole
+                  surgery and delivery safe and comfortable.
+                </p>
+                <a class="newcons__lnk" href="#facilities"
+                  >Our facilities <i aria-hidden="true">→</i></a
+                >
+              </div>
             </article>
           </div>
         </div>
@@ -234,7 +390,7 @@
       <!-- ───────── DR. JAMES'S PERSPECTIVE — editorial issue ───────── -->
       <section class="persp" id="perspectives">
         <div class="wrap">
-          <h2 class="persp__hd reveal">From Dr.&nbsp;James&rsquo;s Desk</h2>
+          <h2 class="persp__hd reveal">From Managing Director Desk</h2>
 
           <div class="persp__grid">
             <article class="persp__q reveal">
@@ -254,7 +410,7 @@
             <figure class="persp__p reveal">
               <div
                 class="persp__cut"
-                data-img="assets/dr-james-old.webp"
+                data-img="assets/dr-james-speaking.webp"
                 role="img"
                 aria-label="Dr. James Elangbam in his office"
               ></div>
@@ -270,20 +426,6 @@
       <!-- ───────── Q&A / OPINION (FAQ style) ───────── -->
       <section class="faq" id="opinions">
         <div class="wrap faq__in">
-          <figure class="vid reveal">
-            <div class="vid__frame" id="vidFrame">
-              <iframe
-                src="https://www.youtube.com/embed/VIDEO_ID"
-                title="Dr. James answers"
-                allowfullscreen
-                loading="lazy"
-              ></iframe>
-            </div>
-            <!-- <figcaption class="vid__cap">
-    <strong>Dr. James Elangbam</strong>
-    <span>Answers your questions in his own words</span>
-  </figcaption> -->
-          </figure>
           <div class="faq__list reveal">
             <div class="fq is-open">
               <button
@@ -343,6 +485,16 @@
               </div>
             </div>
           </div>
+          <figure class="vid reveal">
+            <div class="vid__frame" id="vidFrame">
+              <iframe
+                src="https://www.youtube.com/embed/VIDEO_ID"
+                title="Dr. James answers"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </figure>
         </div>
       </section>
 
@@ -373,76 +525,163 @@
         </div>
       </section>
 
-      <!-- ───────── FACILITIES ───────── -->
+      <!-- ───────── FACILITIES — photo collage ───────── -->
       <section class="fac" id="facilities">
         <div class="wrap">
-          <div class="fac__hd">
-            <h2 class="reveal">BUILT FOR<br />WHAT MATTERS</h2>
-            <div class="fac__hd-r reveal">
-              <p>
-                Operation theatre, cryobank, intensive care and a sterilisation
-                unit — under one roof in Imphal East.
-              </p>
-              <a
-                class="btn"
-                href="mailto:contact@acmefertilitycentre.com?subject=Appointment%20request"
-                >Book a consultation <i aria-hidden="true">→</i></a
-              >
+          <div class="fc">
+            <div class="fc__cols">
+              <!-- col 1 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  data-img="assets/facility-ot.webp"
+                  role="img"
+                  aria-label="Operation theatre"
+                >
+                  <span class="ph">[Operation theatre]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  data-img="assets/care-maternity.webp"
+                  role="img"
+                  aria-label="Patient room"
+                >
+                  <span class="ph">[Patient room]</span>
+                </figure>
+              </div>
+              <!-- col 2 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/facility-icu.webp"
+                  role="img"
+                  aria-label="Intensive care"
+                >
+                  <span class="ph">[Intensive care]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/facility-ot.webp"
+                  role="img"
+                  aria-label="Operation theatre"
+                >
+                  <span class="ph">[Operation theatre]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/care-maternity.webp"
+                  role="img"
+                  aria-label="Patient room"
+                >
+                  <span class="ph">[Patient room]</span>
+                </figure>
+              </div>
+              <!-- col 3 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 80ms"
+                  data-img="assets/care-surgery.webp"
+                  role="img"
+                  aria-label="Consultation room"
+                >
+                  <span class="ph">[Consultation room]</span>
+                </figure>
+              </div>
+              <!-- col 4 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 120ms"
+                  data-img="assets/facility-icu.webp"
+                  role="img"
+                  aria-label="Intensive care corridor"
+                >
+                  <span class="ph">[Corridor]</span>
+                </figure>
+              </div>
+              <!-- col 5 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 120ms"
+                  data-img="assets/facility-ivf.webp"
+                  role="img"
+                  aria-label="Embryology laboratory"
+                >
+                  <span class="ph">[Embryology laboratory]</span>
+                </figure>
+              </div>
+              <!-- col 6 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 80ms"
+                  data-img="assets/care-maternity.webp"
+                  role="img"
+                  aria-label="Patient care"
+                >
+                  <span class="ph">[Patient care]</span>
+                </figure>
+              </div>
+              <!-- col 7 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/facility-cryobank.webp"
+                  role="img"
+                  aria-label="Cryobank"
+                >
+                  <span class="ph">[Cryobank]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/sterilisation.webp"
+                  role="img"
+                  aria-label="Sterilisation unit"
+                >
+                  <span class="ph">[Sterilisation unit]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  style="--reveal-delay: 40ms"
+                  data-img="assets/care-surgery.webp"
+                  role="img"
+                  aria-label="Consultation room"
+                >
+                  <span class="ph">[Consultation room]</span>
+                </figure>
+              </div>
+              <!-- col 8 -->
+              <div class="fc__col">
+                <figure
+                  class="fc__t reveal"
+                  data-img="assets/facility-ivf.webp"
+                  role="img"
+                  aria-label="Embryology laboratory"
+                >
+                  <span class="ph">[Embryology laboratory]</span>
+                </figure>
+                <figure
+                  class="fc__t reveal"
+                  data-img="assets/facility-icu.webp"
+                  role="img"
+                  aria-label="Intensive care"
+                >
+                  <span class="ph">[Intensive care]</span>
+                </figure>
+              </div>
             </div>
-          </div>
 
-          <div class="fac__grid">
-            <figure
-              class="fx fx--big reveal"
-              data-img="assets/facility-ot.webp"
-            >
-              <span class="ph">[Operation theatre]</span>
-              <figcaption>Operation Theatre</figcaption>
-            </figure>
-            <figure
-              class="fx reveal"
-              style="--reveal-delay: 60ms"
-              data-img="assets/facility-icu.webp"
-            >
-              <span class="ph">[Intensive care]</span>
-              <figcaption>Intensive Care</figcaption>
-            </figure>
-            <figure
-              class="fx reveal"
-              style="--reveal-delay: 120ms"
-              data-img="assets/facility-cryobank.webp"
-            >
-              <span class="ph">[Cryobank]</span>
-              <figcaption>Cryobank</figcaption>
-            </figure>
-            <figure
-              class="fx fx--wide reveal"
-              style="--reveal-delay: 60ms"
-              data-img="assets/facility-ivf.webp"
-            >
-              <span class="ph">[Embryology laboratory]</span>
-              <figcaption>Embryology Laboratory</figcaption>
-            </figure>
-            <figure class="fx reveal" data-img="assets/sterilisation.webp">
-              <span class="ph">[Sterilisation unit]</span>
-              <figcaption>Sterilisation Unit</figcaption>
-            </figure>
-            <figure
-              class="fx reveal"
-              style="--reveal-delay: 60ms"
-              data-img="assets/care-maternity.webp"
-            >
-              <span class="ph">[Patient room]</span>
-              <figcaption>Patient Room</figcaption>
-            </figure>
-            <figure
-              class="fx fx--wide reveal"
-              style="--reveal-delay: 120ms"
-              data-img="assets/care-surgery.webp"
-            >
-              <span class="ph">[Consultation room]</span>
-              <figcaption>Consultation Room</figcaption>
-            </figure>
+            <div class="fc__center reveal">
+              <span class="fc__pill">Patient Stories</span>
+              <h2>Trusted by Patients,<br />Backed by Care</h2>
+            </div>
           </div>
         </div>
       </section>
@@ -450,11 +689,107 @@
       <!-- ───────── TESTIMONIALS ───────── -->
       <section class="tst" id="stories">
         <div class="wrap">
+          <div class="tst__track">
+            <!-- PLACEHOLDERS: replace with real, consented patient reviews -->
+            <article class="tc">
+              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>
+                Facilities provided to patient parties is excellent. It is nice
+                to interact with hospital staff. Thanks to this Hospital.
+              </blockquote>
+              <footer>
+                <span class="tc__av" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                  >
+                    <circle cx="12" cy="8.5" r="4" />
+                    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
+                  </svg>
+                </span>
+                <span
+                  ><strong>Sagolsem Anju Devi</strong
+                  ><em>Wangkhei Ningthem</em></span
+                >
+              </footer>
+            </article>
+
+            <article class="tc">
+              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>
+                Satisfied with the services which this hospital has provided.
+                Thank you for the care &amp; love the staff have given us.
+              </blockquote>
+              <footer>
+                <span class="tc__av" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                  >
+                    <circle cx="12" cy="8.5" r="4" />
+                    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
+                  </svg>
+                </span>
+                <span><strong>T. Muidam Maring</strong><em>Imphal</em></span>
+              </footer>
+            </article>
+
+            <article class="tc">
+              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>
+                Overall, I would highly recommend your hospital to anyone
+                seeking medical care. Thanks to all staffs of Acme including
+                security and housekeeping services.
+              </blockquote>
+              <footer>
+                <span class="tc__av" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                  >
+                    <circle cx="12" cy="8.5" r="4" />
+                    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
+                  </svg>
+                </span>
+                <span
+                  ><strong>Yengkhom Indrani</strong
+                  ><em>Kakwa Mayai leikai</em></span
+                >
+              </footer>
+            </article>
+
+            <article class="tc">
+              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>
+                "Excellent Services" The Hospital services have made us very
+                pleased and satisfied. Our Heartfelt thanks to Dr. James and his
+                entire team for their humanity services.
+              </blockquote>
+              <footer>
+                <span class="tc__av" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                  >
+                    <circle cx="12" cy="8.5" r="4" />
+                    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
+                  </svg>
+                </span>
+                <span
+                  ><strong>Kangjam Tilotama</strong><em>Naoremthong</em></span
+                >
+              </footer>
+            </article>
+          </div>
           <div class="tst__hd">
-            <div>
-              <p class="kick">Patient stories</p>
-              <h2>What People Say</h2>
-            </div>
             <div class="care__nav">
               <button
                 type="button"
@@ -473,67 +808,6 @@
                 &#8250;
               </button>
             </div>
-          </div>
-
-          <div class="tst__track">
-            <!-- PLACEHOLDERS: replace with real, consented patient reviews -->
-            <article class="tc">
-              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
-              <blockquote>
-                Facilities provided to patient parties is excellent. It is nice
-                to interact with hospital staff. Thanks to this Hospital.
-              </blockquote>
-              <footer>
-                <span class="tc__av" aria-hidden="true">A</span>
-                <span
-                  ><strong>Sagolsem Anju Devi</strong
-                  ><em>Wangkhei Ningthem</em></span
-                >
-              </footer>
-            </article>
-
-            <article class="tc">
-              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
-              <blockquote>
-                Satisfied with the services which this hospital has provided.
-                Thank you for the care & love the staff have given us.
-              </blockquote>
-              <footer>
-                <span class="tc__av" aria-hidden="true">B</span>
-                <span><strong>T. Muidam Maring</strong><em>Imphal</em></span>
-              </footer>
-            </article>
-
-            <article class="tc">
-              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
-              <blockquote>
-                Overall, I would highly recommend your hospital to anyone
-                seeking medical care. Thanks to all staffs of Acme including
-                security and housekeeping services.
-              </blockquote>
-              <footer>
-                <span class="tc__av" aria-hidden="true">C</span>
-                <span
-                  ><strong>Yengkhom Indrani</strong
-                  ><em>Kakwa Mayai leikai</em></span
-                >
-              </footer>
-            </article>
-
-            <article class="tc">
-              <p class="tc__stars" aria-label="5 out of 5">★★★★★</p>
-              <blockquote>
-                "Excellent Services" The Hospital services have made us very
-                pleased and satisfied. Our Heartfelt thanks to Dr. James and his
-                entire team for their humanity services.
-              </blockquote>
-              <footer>
-                <span class="tc__av" aria-hidden="true">D</span>
-                <span
-                  ><strong>Kangjam Tilotama</strong><em>Naoremthong</em></span
-                >
-              </footer>
-            </article>
           </div>
         </div>
       </section>
@@ -600,82 +874,7 @@
       <!-- <div class="ft__mark" aria-hidden="true">ACME</div> -->
     </footer>
 
-    <script src="js/main.js"></script>
-    <script src="js/hero-scroll.js"></script>
-    <script>
-      /* Fit the hero wordmark to the measure, whatever its text.
-   CSS cannot measure a string, so one fixed font-size only ever suits one
-   word length — a 4-letter word left a gap, a 13-character one overflowed
-   the wrap by 736px.
-
-   This converges in a short loop rather than trusting a single pass. A
-   one-shot fit kept landing on the fallback font's (narrower) metrics and
-   overshooting into the cap: webfont metrics differ, and document.fonts.ready
-   can resolve before the face is actually applied. Re-measuring after each
-   change makes the result independent of when the font arrives. */
-      (function () {
-        var word = document.querySelector(".hero__word");
-        if (!word || !word.parentElement) return;
-        var MIN = 56,
-          MAX = 420,
-          busy = false;
-
-        function textWidth() {
-          var rg = document.createRange();
-          rg.selectNodeContents(word);
-          var rects = rg.getClientRects();
-          if (!rects.length) return 0;
-          var l = Infinity,
-            r = -Infinity;
-          for (var i = 0; i < rects.length; i++) {
-            l = Math.min(l, rects[i].left);
-            r = Math.max(r, rects[i].right);
-          }
-          return r - l;
-        }
-
-        function fit() {
-          if (busy) return; // our own change re-enters via RO
-          if (window.innerWidth <= 720) {
-            word.style.fontSize = "";
-            return;
-          }
-          busy = true;
-          // The word element itself, not its parent: the parent carries the wrap
-          // padding, which overstated the measure by 88px and let the text spill.
-          // The word is a grid item sized by the grid, so measuring it is stable.
-          var avail = word.getBoundingClientRect().width;
-          if (avail > 0) {
-            var size = parseFloat(getComputedStyle(word).fontSize) || 200;
-            for (var pass = 0; pass < 5; pass++) {
-              var w = textWidth();
-              if (!w) break;
-              var next = Math.max(
-                MIN,
-                Math.min(MAX, Math.floor((size * avail) / w)),
-              );
-              if (next === size) break;
-              size = next;
-              word.style.fontSize = size + "px";
-            }
-          }
-          busy = false;
-        }
-
-        fit();
-        if (window.ResizeObserver)
-          new ResizeObserver(fit).observe(word.parentElement);
-        else addEventListener("resize", fit);
-        if (document.fonts) {
-          if (document.fonts.load)
-            document.fonts
-              .load("800 1em Archivo")
-              .then(fit)
-              .catch(function () {});
-          if (document.fonts.ready) document.fonts.ready.then(fit);
-        }
-        addEventListener("load", fit);
-      })();
-    </script>
+    <script src="js/main-new.js"></script>
+    <script src="js/hero-scroll-new.js"></script>
   </body>
 </html>
